@@ -62,8 +62,9 @@ cat state.json | python -m json.tool
 
 ### 验证码一直获取失败
 
-- 检查 CloudMail 是否正常
-- 检查邮箱域名 `CLOUDMAIL_DOMAIN`
+- 检查当前邮箱服务是否正常
+- 如果使用 CloudMail：检查 `CLOUDMAIL_DOMAIN`
+- 如果使用 Cloudflare Temp Email：检查 `CF_TEMP_EMAIL_BASE_URL`、`CF_TEMP_EMAIL_ADMIN_PASSWORD`、`CF_TEMP_EMAIL_DOMAIN`
 - 系统会按 **邮件 ID** 跳过已经尝试过的验证码邮件，而不是按 6 位数字去重
 - 如果浏览器长时间停在 `email-verification`，通常说明新的验证码邮件没有到达，或拿到的是旧邮件
 
@@ -195,7 +196,7 @@ PLAYWRIGHT_PROXY_URL=http://username:password@host.docker.internal:1080
 
 ### 操作按钮全部禁用
 
-轮转 / 补满 / 清理等账号池操作需要先在「设置」页完成管理员登录。
+轮转 / 补满 / 清理等账号池操作需要先在「配置面板 → 管理员 / 主号」完成管理员登录。
 
 ### Team 成员页的 owner 为什么没有“移出”按钮
 

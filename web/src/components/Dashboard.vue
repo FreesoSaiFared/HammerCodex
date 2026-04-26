@@ -22,7 +22,7 @@
         {{ message }}
       </div>
       <div v-if="!adminReady" class="mx-4 mt-4 px-4 py-3 rounded-lg text-sm border bg-amber-500/10 text-amber-300 border-amber-500/20">
-        请先在「设置」页完成管理员登录后，才能操作账号。
+        请先在「配置面板」页完成管理员登录后，才能操作账号。
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
@@ -42,7 +42,7 @@
             <tr v-for="(acc, i) in status.accounts" :key="acc.email"
               class="border-b border-gray-800/50 hover:bg-gray-800/30 transition">
               <td class="px-4 py-3 text-gray-500">{{ i + 1 }}</td>
-              <td class="px-4 py-3 font-mono text-xs">{{ acc.email }}</td>
+              <td class="px-4 py-3 font-mono text-xs text-slate-200">{{ acc.email }}</td>
               <td class="px-4 py-3">
                 <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium"
                   :class="statusClass(acc.status)">
@@ -350,7 +350,7 @@ async function kickAccount(email) {
 async function removeAccount(email) {
   if (actionDisabled.value) return
 
-  const ok = window.confirm(`确认删除账号 ${email}？\n这会同时清理本地记录、CPA、Team/Invite 和 CloudMail。`)
+  const ok = window.confirm(`确认删除账号 ${email}？\n这会同时清理本地记录、已配置远端、Team/Invite 和 CloudMail。`)
   if (!ok) return
 
   actionEmail.value = email

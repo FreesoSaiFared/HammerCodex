@@ -23,11 +23,42 @@ def _get_int_env(name: str, default: int) -> int:
     return int(parse_env_value(os.environ.get(name, str(default))))
 
 
+def _get_float_env(name: str, default: float) -> float:
+    return float(parse_env_value(os.environ.get(name, str(default))))
+
+
+def _get_bool_env(name: str, default: bool) -> bool:
+    raw = parse_env_value(os.environ.get(name, ""))
+    if not raw:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on", "enabled"}
+
+
+def _get_str_env(name: str, default: str = "") -> str:
+    value = parse_env_value(os.environ.get(name, default))
+    return str(value).strip()
+
+
+def _normalize_sub2api_ws_mode(value: str) -> str:
+    mode = str(value or "").strip().lower()
+    if mode in {"off", "ctx_pool", "passthrough"}:
+        return mode
+    return "off"
+
+
 # CloudMail 配置
 CLOUDMAIL_BASE_URL = os.environ.get("CLOUDMAIL_BASE_URL", "")
 CLOUDMAIL_EMAIL = os.environ.get("CLOUDMAIL_EMAIL", "")
 CLOUDMAIL_PASSWORD = os.environ.get("CLOUDMAIL_PASSWORD", "")
 CLOUDMAIL_DOMAIN = os.environ.get("CLOUDMAIL_DOMAIN", "")
+
+# 邮箱提供者配置
+MAIL_PROVIDER = os.environ.get("MAIL_PROVIDER", "cloudmail").strip().lower() or "cloudmail"
+
+# Cloudflare Temp Email 配置
+CF_TEMP_EMAIL_BASE_URL = os.environ.get("CF_TEMP_EMAIL_BASE_URL", "")
+CF_TEMP_EMAIL_ADMIN_PASSWORD = os.environ.get("CF_TEMP_EMAIL_ADMIN_PASSWORD", "")
+CF_TEMP_EMAIL_DOMAIN = os.environ.get("CF_TEMP_EMAIL_DOMAIN", "")
 
 # ChatGPT Team 配置
 CHATGPT_ACCOUNT_ID = os.environ.get("CHATGPT_ACCOUNT_ID", "")
@@ -35,6 +66,20 @@ CHATGPT_ACCOUNT_ID = os.environ.get("CHATGPT_ACCOUNT_ID", "")
 # CPA (CLIProxyAPI) 配置
 CPA_URL = os.environ.get("CPA_URL", "")
 CPA_KEY = os.environ.get("CPA_KEY", "")
+
+# Sub2API 配置
+SUB2API_URL = os.environ.get("SUB2API_URL", "")
+SUB2API_EMAIL = os.environ.get("SUB2API_EMAIL", "")
+SUB2API_PASSWORD = os.environ.get("SUB2API_PASSWORD", "")
+SUB2API_GROUP = os.environ.get("SUB2API_GROUP", "")
+SUB2API_CONCURRENCY = _get_int_env("SUB2API_CONCURRENCY", 10)
+SUB2API_PRIORITY = _get_int_env("SUB2API_PRIORITY", 1)
+SUB2API_RATE_MULTIPLIER = _get_float_env("SUB2API_RATE_MULTIPLIER", 1)
+SUB2API_AUTO_PAUSE_ON_EXPIRED = _get_bool_env("SUB2API_AUTO_PAUSE_ON_EXPIRED", True)
+SUB2API_MODEL_WHITELIST = _get_str_env("SUB2API_MODEL_WHITELIST", "")
+SUB2API_OPENAI_WS_MODE = _normalize_sub2api_ws_mode(_get_str_env("SUB2API_OPENAI_WS_MODE", "off"))
+SUB2API_OPENAI_PASSTHROUGH = _get_bool_env("SUB2API_OPENAI_PASSTHROUGH", False)
+SUB2API_OVERWRITE_ACCOUNT_SETTINGS = _get_bool_env("SUB2API_OVERWRITE_ACCOUNT_SETTINGS", False)
 
 # 轮询邮件间隔/超时（秒）
 EMAIL_POLL_INTERVAL = _get_int_env("EMAIL_POLL_INTERVAL", 3)
